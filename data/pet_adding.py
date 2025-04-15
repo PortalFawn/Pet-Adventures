@@ -32,14 +32,13 @@ def load():
 
 def save(pets:pd.DataFrame):
     print('Saving to CSV...')
-    pets.to_csv('data/pets.csv')
+    pets.to_csv('data/pets.csv', mode='a', header=False)
 
 def main():
     flag = True
     pet_flag = True
     input_flag = True
-
-    pets = load()
+    pets_added = 0
 
     while flag:
         try:
@@ -84,13 +83,19 @@ def main():
                     except:
                         print('invalid input')
                 
+                if pets_added == 0:
+                    # Issue Adding new pet to Original list - End of night Commit
+                    new_pet = pd.DataFrame([pet_name, pet_str, pet_spd, pet_int])
+                    pets_added += 1
 
-                # Issue Adding new pet to Original list - End of night Commit
-                new_pet = pd.Series([pet_name, pet_str, pet_spd, pet_int])
-                pets_out = pd.concat([pets, new_pet.to_frame().T], ignore_index=True)
+                    new_pet = new_pet.T
 
-                print(pets_out)
-                print(new_pet)
+                    print(new_pet)
+                else:
+                    newer_pet = pd.DataFrame([pet_name, pet_str, pet_spd, pet_int])
+
+                    new_pet = pd.concat([new_pet, newer_pet.T])
+                    print(new_pet)
 
                 input_flag = True
                 while input_flag:
@@ -106,7 +111,8 @@ def main():
                 else:
                     pet_flag = True
 
-    save(pets_out)
+    print(new_pet)
+    save(new_pet)
     print('Program Closing')
         
 

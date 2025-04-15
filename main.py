@@ -126,7 +126,7 @@ def encounter():
     #Loads pet data CSV
     pets = data_load()
 
-    pet_id = r.randint(0, 2) # future change to area based, and use the range of area_pets
+    pet_id = r.randint(0, len(pets)-1) # future change to area based, and use the range of area_pets
 
     # create area variable, with part of the CSV containing the are the pets spawn, 1 area per pet
     # Encounter func takes area variable
