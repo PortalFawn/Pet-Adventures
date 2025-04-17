@@ -3,6 +3,7 @@ import pandas as pd
 import json
 import os
 import random as r
+import plotly
 
 def data_load():
     pets = pd.read_csv('data/pets.csv')
@@ -17,7 +18,8 @@ def save(save_file, player_pets):
     save_file['pets'] = player_pets
 
     with open("data/save_file.json", "w") as file:
-        json.dump(save_file, file)
+        json.dump(save_file, file, cls=plotly.utils.PlotlyJSONEncoder)
+        # Plotly is there to ensure that there are no encoding issues, such as trying to serialize int64, plotly is to fix that and any more issues that may appear
 
 
 def chance(percent):
@@ -134,7 +136,6 @@ def encounter():
     # area_pets = pets.loc[area]
 
     pet_data = pets.loc[pet_id]
-
     print(f'{pet_data.Name}')
 
 
@@ -150,7 +151,10 @@ def encounter():
         # pet is to hold the default info of the pet
         pet = {
             'id':pet_id,
-            'name':pet_data['Name']
+            'name':pet_data['Name'],
+            'strength':pet_data['Strength'],
+            'speed':pet_data['Speed'],
+            'int':pet_data['Intelligence']
         }
 
         # pet_out is to ensure that the output has the correct name when output
@@ -282,7 +286,7 @@ def print_pets(player_pets):
                 # nicknames will just be name, that is set to pets default name at first
                 pet_print = player_pets[str(pet_choose-1)]
                 clear()
-                print(f'Name: {pet_print["name"]}\nID: {pet_print["id"]}\nPet Type: {pet_data["Name"].where(pet_data.index == pet_print["id"]).dropna()}')
+                print(f'Name: {pet_print["name"]}\nID: {pet_print["id"]}\nPet Type: {pet_data["Name"].where(pet_data.index == pet_print["id"]).dropna()}\nStrength: {pet_print["strength"]}\nSpeed: {pet_print["speed"]}\nIntelligence: {pet_print["int"]}')
                 time.sleep(4)
 
         
