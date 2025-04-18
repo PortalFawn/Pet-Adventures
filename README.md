@@ -1,4 +1,7 @@
-This is a small fun side-project im doing to fill time
+# PET ADVENTURES
 
+This is a small fun side-project im doing to fill time.
 
-As an explaination for however bad you think the code is, it was primarily completed in the ealry hours of the morning.
+The premise is that you can collect pets through traveling
+These pets will be able to collect materials or battle eachother
+You will be able to craft or find armour and weapons
