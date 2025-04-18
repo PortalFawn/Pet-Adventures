@@ -5,6 +5,11 @@ import os
 import random as r
 import plotly
 
+'''
+Areas - add areas that pets can be found in
+Pet battles - add helmets/armour and weapon - once function is being added, create CSV called armour.csv and weapons.csv
+'''
+
 def data_load():
     pets = pd.read_csv('data/pets.csv')
     return pets

@@ -51,7 +51,7 @@ def main():
         if select == 1:
             while pet_flag:
                 clear()
-                print('It is advised that for base level pets that the numbers add to 25')
+                print('It is advised that for base level pets that the numbers add to 15')
                 while input_flag:
                     pet_name = input('What is the name of this pet?\n')
                     if len(pet_name) == 0:
