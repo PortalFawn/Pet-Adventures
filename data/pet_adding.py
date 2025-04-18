@@ -82,17 +82,27 @@ def main():
                         input_flag = False
                     except:
                         print('invalid input')
+
+                input_flag = True
+                while input_flag:
+                    try:
+                        print("Areas:\n")
+                        pet_area = int(input('What area is this pet from?\n'))
+                        input_flag = False
+                    except:
+                        print('invalid input')
                 
                 if pets_added == 0:
                     # Issue Adding new pet to Original list - End of night Commit
-                    new_pet = pd.DataFrame([pet_name, pet_str, pet_spd, pet_int])
+                    new_pet = pd.DataFrame([pet_name, pet_str, pet_spd, pet_int, pet_area])
                     pets_added += 1
 
                     new_pet = new_pet.T
 
                     print(new_pet)
                 else:
-                    newer_pet = pd.DataFrame([pet_name, pet_str, pet_spd, pet_int])
+                    newer_pet = pd.DataFrame([pet_name, pet_str, pet_spd, pet_int ,pet_area])
+                    pets_added += 1
 
                     new_pet = pd.concat([new_pet, newer_pet.T])
                     print(new_pet)

@@ -1,5 +1,5 @@
-ID,Name,Strength,Speed,Intelligence
-0,Bland,5,5,5
-0,Speedy,2,10,3
-0,Smort,1,4,10
-0,Chonky,10,3,2
+ID,Name,Strength,Speed,Intelligence,Area
+0,Bland,5,5,5,0
+0,Speedy,2,10,3,0
+0,Smort,1,4,10,0
+0,Chonky,10,3,2,0

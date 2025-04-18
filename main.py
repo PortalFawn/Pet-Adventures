@@ -115,10 +115,10 @@ def menu_select(save_file, player_pets):
         
     match choice:
         case 1:
-            pet = [None, None] # Check this works next use
+            pet = [None, 0, 0, None]
 
-            while pet[1] != True:
-                pet = travel()
+            while pet[3] != True:
+                pet = travel(pet[1], pet[2])
 
                 if pet[0] != None:
                     slot = str(len(player_pets))
@@ -138,20 +138,22 @@ def menu_select(save_file, player_pets):
 
 
 
-def travel():
+def travel(travels = 0, area = 0):
     out = False # catches if the user doesnt want to continue traveling and doesnt remove the last pet hey caught if they choose to leave after catching a last pet
+    areas = ['Plains', 'Forest', 'Mountains']
 
-     # encounter chance, if it is true, you encounter a pet
+    # encounter chance, if it is true, you encounter a pet
     enc = chance(0.5)
 
     if enc:
-        pet = encounter()
+        pet = encounter(area)
     else:
         print('You travel, but dont find anything')
         pet = None
 
     flag_input = True
     while flag_input:
+        travels += 1
         time.sleep(2)
         clear()
         try:
@@ -159,17 +161,28 @@ def travel():
             flag_input = input_check(again, 2)
             if again == 2:
                 out = True 
+            else:
+                out = False
         except:
             print('nuh uh')
 
-    return [pet, out]
+        if travels >= 10:
+            area = 1
+            print(f'You are entering {areas[area]}')
+        if travels >= 20:
+            area = 1
+            print(f'You are entering {areas[area]}')
 
-def encounter():
+    return [pet, travels, area, out]
+
+def encounter(area):
     int_input = True
     # Single function to control pet encounters
 
     #Loads pet data CSV
     pets = data_load()
+
+    pets = pets.where(pets['Area'] <= area)
 
     pet_id = r.randint(0, len(pets)-1) # future change to area based, and use the range of area_pets
 
@@ -191,6 +204,8 @@ def encounter():
         if catch_input == 1:
             # Catching the pet
             catch_rate = chance(0.8)
+        else:
+            catch_rate = False
 
     if catch_rate:
         print('catch')
@@ -273,19 +288,14 @@ def area_manage():
             print('Invalid input')
 
         input_flag = True
-        match area:
-            case 1:
-                print('Home')
-            case 2:
-                print('Plains')
-            case 3:
-                print('Forest')
-            case 4:
-                print('Mines')
-            case 5:
-                flag = False
+        if area in range(1,5):
+            areas(area)
+        else:
+            flag = False
 
-
+def areas(choice):
+    area = ['Home', 'Plains', 'Forest', 'Mines']
+    print(area[choice])
 
 def pets_manage(player_pets):
 
