@@ -8,15 +8,17 @@ import plotly
 '''
 Areas - add areas that pets can be found in
 Pet battles - add helmets/armour and weapon - once function is being added, create CSV called armour.csv and weapons.csv
+
+Save file layout
+name
+materials
+pets - pet informations - armour - weapons
+
 '''
 
 def data_load():
     pets = pd.read_csv('data/pets.csv')
     return pets
-
-# def save_load
-# loads the players saves, technically the player can have infinite saves
-# create a folder with saves for the program to check
 
 def save(save_file:dict, player_pets:dict):
 
@@ -31,6 +33,7 @@ def save_load():
         json_data = json.load(json_file)
 
     return json_data
+
 
 def chance(percent:float):
     chance_val = r.random() # Creates a random number between 0 and 1
@@ -254,7 +257,6 @@ def nickname(pet:dict):
     return pet
 
 
-
     
 def area_manage():
     flag = True
@@ -340,7 +342,6 @@ def print_pets(player_pets):
 
 
 def main():
-
 
     while True:
         time.sleep(4)
