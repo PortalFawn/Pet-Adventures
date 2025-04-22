@@ -96,7 +96,7 @@ def main_menu():
         case 3:
             exit()
 
-def menu_select(save_file, player_pets):
+def menu_select(save_file:dict, player_pets:dict):
     flag = True
 
     save_file = {'name':save_file['name']}
@@ -138,7 +138,7 @@ def menu_select(save_file, player_pets):
 
 
 
-def travel(travels = 0, area = 0):
+def travel(player_pets:dict, travels = 0, area = 0):
     out = False # catches if the user doesnt want to continue traveling and doesnt remove the last pet hey caught if they choose to leave after catching a last pet
     areas = ['Plains', 'Forest', 'Mountains']
 
@@ -146,7 +146,7 @@ def travel(travels = 0, area = 0):
     enc = chance(0.5)
 
     if enc:
-        pet = encounter(area)
+        pet = encounter(area, player_pets)
     else:
         print('You travel, but dont find anything')
         pet = None
@@ -166,16 +166,16 @@ def travel(travels = 0, area = 0):
         except:
             print('nuh uh')
 
-        if travels >= 10:
+        if travels == 10:
             area = 1
             print(f'You are entering {areas[area]}')
-        if travels >= 20:
+        if travels == 20:
             area = 1
             print(f'You are entering {areas[area]}')
 
     return [pet, travels, area, out]
 
-def encounter(area):
+def encounter(area:int, player_pets:dict):
     int_input = True
     # Single function to control pet encounters
 
@@ -192,20 +192,37 @@ def encounter(area):
     # area_pets = pets.loc[area]
 
     pet_data = pets.loc[pet_id]
-    print(f'{pet_data.Name}')
+    clear()
+    print(f'You encounter a {pet_data.Name}')
 
     while int_input:
         try:
-            catch_input = int(input('Would you like to try catch it?\n1. Yes\n2. No\n'))
-            int_input = input_check(catch_input, 2)
+            if len(player_pets) == 0:
+                action_input = int(input('Would you like to:\n1. Catch\n2. Run'))
+                int_input = input_check(action_input, 2)
+            else:
+                action_input = int(input('Would you like to:\n1. Catch\n2. Attack\n3. Run'))
+                int_input = input_check(action_input, 3)
         except:
             print('Invalid input')
 
-        if catch_input == 1:
-            # Catching the pet
-            catch_rate = chance(0.8)
+        if len(player_pets) == 0:
+            match action_input:
+                case 1:
+                    # Catching the pet
+                    catch_rate = chance(0.8)
+                case 2:
+                    catch_rate = False
         else:
-            catch_rate = False
+            match action_input:
+                case 1:
+                    # Catching the pet
+                    catch_rate = chance(0.8)
+                case 2:
+                    attack(player_pets)
+                    catch_rate = False
+                case 3:
+                    catch_rate = False
 
     if catch_rate:
         print('catch')
@@ -217,6 +234,7 @@ def encounter(area):
         pet = {
             'id':pet_id,
             'name':pet_data['Name'],
+            'level':1,
             'strength':pet_data['Strength'],
             'speed':pet_data['Speed'],
             'int':pet_data['Intelligence']
@@ -227,7 +245,7 @@ def encounter(area):
 
         return pet_out
     else:
-        print('unsuccessful')
+        print('Not Catch')
         return None
 
 def nickname(pet:dict):
@@ -271,6 +289,15 @@ def nickname(pet:dict):
     pet['name'] = new_name
     return pet
 
+def attack(player_pets:dict):
+    print('Select a Pet to battle with')
+    pet = print_pets(player_pets)
+
+    if pet == 0:
+        print('You flee the battle')
+    else:
+        print(f'{pet}')
+
 
     
 def area_manage():
@@ -293,11 +320,13 @@ def area_manage():
         else:
             flag = False
 
-def areas(choice):
+def areas(choice:int):
     area = ['Home', 'Plains', 'Forest', 'Mines']
     print(area[choice])
 
-def pets_manage(player_pets):
+def pets_manage(player_pets:dict):
+    pet = -1
+    pet_data = data_load()
 
     time.sleep(2)
     clear()
@@ -308,13 +337,18 @@ def pets_manage(player_pets):
         print('You have no pets')
         time.sleep(2)
     else:
-        print_pets(player_pets)
+        while pet != 0:
+            pet = print_pets(player_pets)
+            pet_print = player_pets[str(pet-1)]
+            clear()
+            print(f'Name: {pet_print["name"]}\nID: {pet_print["id"]}\nPet Type: {pet_data["Name"].where(pet_data.index == pet_print["id"]).dropna()}\nStrength: {pet_print["strength"]}\nSpeed: {pet_print["speed"]}\nIntelligence: {pet_print["int"]}')
+            print('''The Strength stat affects the amount of damage that a pet can take and deal
+                The Speed stat affects if the pet attacks first, and chance to hit. having double speed of the opponent can cause 2 attacks at one time.
+                The Intelligence stat is the chance for the pet to do double damage''')
+            time.sleep(4)
 
-def print_pets(player_pets):
+def print_pets(player_pets:dict):
     flag = True
-
-    # Load CSV so that it can read the pet type once nick names are added
-    pet_data = data_load()
 
     while flag:
 
@@ -343,10 +377,7 @@ def print_pets(player_pets):
             else: 
                 # possibly add the possibility to set nicknames
                 # nicknames will just be name, that is set to pets default name at first
-                pet_print = player_pets[str(pet_choose-1)]
-                clear()
-                print(f'Name: {pet_print["name"]}\nID: {pet_print["id"]}\nPet Type: {pet_data["Name"].where(pet_data.index == pet_print["id"]).dropna()}\nStrength: {pet_print["strength"]}\nSpeed: {pet_print["speed"]}\nIntelligence: {pet_print["int"]}')
-                time.sleep(4)
+                return pet_choose
 
         
 

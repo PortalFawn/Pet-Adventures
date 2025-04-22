@@ -3,3 +3,5 @@ ID,Name,Strength,Speed,Intelligence,Area
 0,Speedy,2,10,3,0
 0,Smort,1,4,10,0
 0,Chonky,10,3,2,0
+0,Bear,8,5,2,0
+0,Cat,3,6,6,0
