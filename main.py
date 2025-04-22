@@ -219,7 +219,7 @@ def encounter(area:int, player_pets:dict):
                     # Catching the pet
                     catch_rate = chance(0.8)
                 case 2:
-                    attack(player_pets)
+                    attack(player_pets, pet_data)
                     catch_rate = False
                 case 3:
                     catch_rate = False
@@ -289,14 +289,30 @@ def nickname(pet:dict):
     pet['name'] = new_name
     return pet
 
-def attack(player_pets:dict):
+def attack(player_pets:dict, opponent_pet:dict):
+    battle_check = True
+    attack_check = True
+
+    clear()
     print('Select a Pet to battle with')
     pet = print_pets(player_pets)
 
     if pet == 0:
         print('You flee the battle')
     else:
-        print(f'{pet}')
+        chosen_pet = player_pets[str(pet-1)]
+        print(f'You select {chosen_pet["name"]}')
+
+    #Pet attributes only needed for battles, resets after each fight
+    
+    clear()
+    pet_health = chosen_pet['strength']
+    opponent_health = opponent_pet['strength']
+    player_turn = True if chosen_pet['speed'] > opponent_pet['speed'] else False
+    player_double = True if chosen_pet['speed'] > opponent_pet['speed']*2 else False
+    while battle_check:
+        if player_turn: # add change for attacks not to land
+            print(f'{chosen_pet["name"]} Attacks and deals {chosen_pet["strength"]} damage')
 
 
     
