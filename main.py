@@ -118,7 +118,7 @@ def menu_select(save_file:dict, player_pets:dict):
             pet = [None, 0, 0, None]
 
             while pet[3] != True:
-                pet = travel(pet[1], pet[2])
+                pet = travel(player_pets, pet[1], pet[2])
 
                 if pet[0] != None:
                     slot = str(len(player_pets))
@@ -210,17 +210,16 @@ def encounter(area:int, player_pets:dict):
             match action_input:
                 case 1:
                     # Catching the pet
-                    catch_rate = chance(0.8)
+                    catch_rate = chance(0.5)
                 case 2:
                     catch_rate = False
         else:
             match action_input:
                 case 1:
                     # Catching the pet
-                    catch_rate = chance(0.8)
+                    catch_rate = chance(0.5)
                 case 2:
-                    attack(player_pets, pet_data)
-                    catch_rate = False
+                    catch_rate = attack(player_pets, pet_data)
                 case 3:
                     catch_rate = False
 
@@ -291,7 +290,6 @@ def nickname(pet:dict):
 
 def attack(player_pets:dict, opponent_pet:dict):
     battle_check = True
-    attack_check = True
 
     clear()
     print('Select a Pet to battle with')
@@ -307,12 +305,33 @@ def attack(player_pets:dict, opponent_pet:dict):
     
     clear()
     pet_health = chosen_pet['strength']
-    opponent_health = opponent_pet['strength']
-    player_turn = True if chosen_pet['speed'] > opponent_pet['speed'] else False
-    player_double = True if chosen_pet['speed'] > opponent_pet['speed']*2 else False
+    opponent_health = opponent_pet['Strength']
+    player_turn = True if chosen_pet['speed'] >= opponent_pet['Speed'] else False
+    player_double = True if chosen_pet['speed'] > opponent_pet['Speed']*2 else False
+
+    # Battle loops
     while battle_check:
-        if player_turn: # add change for attacks not to land
+        time.sleep(5)
+        clear()
+        if player_turn: # add chance for attacks not to land
             print(f'{chosen_pet["name"]} Attacks and deals {chosen_pet["strength"]} damage')
+            opponent_health -= chosen_pet['strength']
+            player_turn = False
+        else: # add chance for attacks not to land
+            print(f'{opponent_pet["Name"]} Attacks and deals {opponent_pet["Strength"]} damage')
+            pet_health -= opponent_pet['Strength']
+            print(f'{chosen_pet["name"]} has {pet_health} health remaining')
+            player_turn = True
+
+
+        if pet_health <= 0:
+            print(f'{opponent_pet["Name"]} has won the fight')
+            return False
+        
+        if opponent_health <= 0:
+            print(f'{chosen_pet["name"]} has won the fight')
+            print('You get to catch the pet without fail')
+            return True
 
 
     
@@ -355,13 +374,16 @@ def pets_manage(player_pets:dict):
     else:
         while pet != 0:
             pet = print_pets(player_pets)
-            pet_print = player_pets[str(pet-1)]
-            clear()
-            print(f'Name: {pet_print["name"]}\nID: {pet_print["id"]}\nPet Type: {pet_data["Name"].where(pet_data.index == pet_print["id"]).dropna()}\nStrength: {pet_print["strength"]}\nSpeed: {pet_print["speed"]}\nIntelligence: {pet_print["int"]}')
-            print('''The Strength stat affects the amount of damage that a pet can take and deal
-                The Speed stat affects if the pet attacks first, and chance to hit. having double speed of the opponent can cause 2 attacks at one time.
-                The Intelligence stat is the chance for the pet to do double damage''')
-            time.sleep(4)
+            if pet == 0:
+                print('Exiting Pet Management')
+            else:
+                pet_print = player_pets[str(pet-1)]
+                clear()
+                print(f'Name: {pet_print["name"]}\nID: {pet_print["id"]}\nPet Type: {pet_data["Name"].where(pet_data.index == pet_print["id"]).dropna()}\nStrength: {pet_print["strength"]}\nSpeed: {pet_print["speed"]}\nIntelligence: {pet_print["int"]}')
+                print('''The Strength stat affects the amount of damage that a pet can take and deal
+The Speed stat affects if the pet attacks first, and chance to hit. having double speed of the opponent can cause 2 attacks at one time.
+The Intelligence stat is the chance for the pet to do double damage''')
+                time.sleep(4)
 
 def print_pets(player_pets:dict):
     flag = True
@@ -388,6 +410,7 @@ def print_pets(player_pets:dict):
         else:
             if pet_choose == 0:
                 flag = False
+                return pet_choose
             elif pet_choose == -1:
                 print('test')
             else: 
