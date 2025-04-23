@@ -3,7 +3,6 @@ import pandas as pd
 import json
 import os
 import random as r
-import plotly
 
 '''
 Areas - add areas that pets can be found in
@@ -13,7 +12,6 @@ Save file layout
 name
 materials
 pets - pet informations - armour - weapons
-
 '''
 
 def data_load():
@@ -25,9 +23,8 @@ def save(save_file:dict, player_pets:dict):
     save_file['pets'] = player_pets
 
     with open("data/save_file.json", "w") as file:
-        json.dump(save_file, file, cls=plotly.utils.PlotlyJSONEncoder)
-        # Plotly is there to ensure that there are no encoding issues, such as trying to serialize int64, plotly is to fix that and any more issues that may appear
-
+        json.dump(save_file, file)
+ 
 def save_load():
     with open("data/save_file.json") as json_file:
         json_data = json.load(json_file)
@@ -234,9 +231,9 @@ def encounter(area:int, player_pets:dict):
             'id':pet_id,
             'name':pet_data['Name'],
             'level':1,
-            'strength':pet_data['Strength'],
-            'speed':pet_data['Speed'],
-            'int':pet_data['Intelligence']
+            'strength': int(pet_data['Strength']),
+            'speed': int(pet_data['Speed']),
+            'int': int(pet_data['Intelligence'])
         }
 
         # pet_out is to ensure that the output has the correct name when output
@@ -357,7 +354,7 @@ def area_manage():
 
 def areas(choice:int):
     area = ['Home', 'Plains', 'Forest', 'Mines']
-    print(area[choice])
+    print(area[choice-1])
 
 def pets_manage(player_pets:dict):
     pet = -1
